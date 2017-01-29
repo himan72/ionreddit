@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
+import { RedditService } from '../../providers/reddit-service';
+import { DetailsPage } from '../details-page/details-page';
 
 /*
   Generated class for the Reddits page.
@@ -12,11 +14,26 @@ import { NavController, NavParams } from 'ionic-angular';
   templateUrl: 'reddits.html'
 })
 export class RedditsPage {
+  items: any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {}
+  constructor(public navCtrl: NavController, public navParams: NavParams, private redditService: RedditService ) {
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad RedditsPage');
+  }
+  ngOnInit(){
+    this.getPosts('sports', 5);
+
+  }
+  getPosts(category, limit) {
+    this.redditService.getPosts(category, limit).subscribe(response => {
+      this.items = response.data.children;
+    });
+  }
+
+  viewItem(item){
+    this.navCtrl.push(DetailsPage, {
+      item:item,
+    })
+
   }
 
 }
