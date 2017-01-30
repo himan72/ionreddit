@@ -15,14 +15,34 @@ import { DetailsPage } from '../details-page/details-page';
 })
 export class RedditsPage {
   items: any;
+  category: any;
+  limit: any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private redditService: RedditService ) {
-
+    this.getDefaults();
   }
+
   ngOnInit(){
-    this.getPosts('sports', 5);
-
+    this.getPosts(this.category, this.limit);
   }
+
+    getDefaults(){
+      if(localStorage.getItem('category') != null) {
+        this.category = localStorage.getItem('category');
+      }
+      else {
+            this.category = 'sports';
+
+      }
+
+      if(localStorage.getItem('limit') != null) {
+        this.limit = localStorage.getItem('limit');
+      }
+      else {
+            this.limit = 10;
+      }
+  }
+
   getPosts(category, limit) {
     this.redditService.getPosts(category, limit).subscribe(response => {
       this.items = response.data.children;
@@ -34,6 +54,9 @@ export class RedditsPage {
       item:item,
     })
 
+  }
+  changeCategory(){
+    this.getPosts(this.category, this.limit);
   }
 
 }
